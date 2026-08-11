@@ -1,61 +1,70 @@
-<svg width="640" height="270" viewBox="0 0 640 270" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="640" height="270" fill="#FFFFFF"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FlowCanvas 空态插画（空数据 / 请求异常共用）
+  · viewBox 已裁到可见内容边界，故「高 240」即真实可见高度，宽高比 1.35
+  · 六个 CSS 变量可换肤；默认值取 07 §2.4 主色七阶，改主题时同步
+      --nd-paper-light  colorPrimaryBgHover      阶 2
+      --nd-paper        colorPrimaryBorder       阶 3
+      --nd-paper-dark   colorPrimaryBorderHover  阶 4
+      --nd-arrow        colorPrimary             阶 6
+      --nd-shadow       colorPrimaryBgHover      阶 2
+      --nd-detail       白
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="109 67 842 627" role="img"
+     aria-labelledby="nd-title nd-desc" class="fc-empty-illustration">
+  <title id="nd-title">暂无数据</title>
+  <desc id="nd-desc">一卷空白文档，一条虚线绕圈后向右上方扬起，末端为箭头。</desc>
 
   <defs>
-    <!-- 弹窗卡片（共用图形） -->
-    <g id="card">
-      <rect x="58" y="92" width="84" height="62" rx="10" fill="#FFFFFF" stroke="#E6E1D8" stroke-width="2"/>
-      <path d="M70 108 L96 108" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
-      <path d="M127 105 L133 111 M133 105 L127 111" stroke="#D5CEC2" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M70 126 L130 126" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
-      <path d="M70 140 L112 140" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
-    </g>
+    <linearGradient id="nd-paper-gradient" gradientUnits="userSpaceOnUse" x1="300" y1="314" x2="648" y2="684">
+      <stop offset="0" stop-color="var(--nd-paper-light, #D5C6B2)"/>
+      <stop offset="0.55" stop-color="var(--nd-paper, #BCA58A)"/>
+      <stop offset="1" stop-color="var(--nd-paper-dark, #A28869)"/>
+    </linearGradient>
+    <linearGradient id="nd-roll-gradient" gradientUnits="userSpaceOnUse" x1="233" y1="351" x2="350" y2="468">
+      <stop offset="0" stop-color="var(--nd-paper-dark, #A28869)"/>
+      <stop offset="1" stop-color="var(--nd-arrow, #8A6F52)"/>
+    </linearGradient>
+    <radialGradient id="nd-shadow-gradient" gradientUnits="userSpaceOnUse" cx="405" cy="590" r="300">
+      <stop offset="0" stop-color="var(--nd-shadow, #D5C6B2)" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="var(--nd-shadow, #D5C6B2)" stop-opacity="0.12"/>
+    </radialGradient>
   </defs>
 
-  <!-- ============ A · 环绕一圈，右上出头 ============ -->
-  <g>
-    <path d="M100 173 A60 50 0 1 1 146 84"
-          stroke="#D5CEC2" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 7"/>
-    <use href="#card"/>
-    <path d="M134 87 L146 84 L143 96"
-          stroke="#9C968B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="100" y="216" font-family="Inter, PingFang SC, sans-serif" font-size="14" text-anchor="middle">
-      <tspan fill="#262420">暂无元字段数据，</tspan><tspan fill="#74593F">刷新列表</tspan>
-    </text>
-    <text x="100" y="245" font-family="Inter, PingFang SC, sans-serif" font-size="12"
-          fill="#9C968B" text-anchor="middle">A · 环绕一圈，右上出头</text>
-  </g>
+  <!-- 背景透明，不画底色 -->
+  <path d="M144 566C205 535 300 530 380 548C464 528 576 536 647 570C689 590 694 617 660 638C607 671 507 684 418 666C329 681 229 665 165 631C123 609 115 581 144 566Z"
+        fill="url(#nd-shadow-gradient)"/>
 
-  <!-- ============ B · 环绕后收窄升走 ============ -->
-  <g transform="translate(220,0)">
-    <path d="M100 173 A60 50 0 1 1 138 94 A26 22 0 0 1 100 66"
-          stroke="#D5CEC2" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 7"/>
-    <use href="#card"/>
-    <path d="M91 77 L100 65 L109 77"
-          stroke="#9C968B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="100" y="216" font-family="Inter, PingFang SC, sans-serif" font-size="14" text-anchor="middle">
-      <tspan fill="#262420">暂无元字段数据，</tspan><tspan fill="#74593F">刷新列表</tspan>
-    </text>
-    <text x="100" y="245" font-family="Inter, PingFang SC, sans-serif" font-size="12"
-          fill="#9C968B" text-anchor="middle">B · 环绕后收窄升走</text>
-  </g>
+  <!-- 虚线轨迹画在纸后，起点收口贴住纸边 -->
+  <path d="M592 369C654 359 704 332 751 298C779 278 791 252 786 225C781 196 759 181 736 190C712 200 706 226 720 247C736 271 765 274 792 260C834 238 865 205 889 170C903 149 914 126 925 104"
+        fill="none" stroke="var(--nd-arrow, #8A6F52)" stroke-width="8"
+        stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="14,14"/>
+  <path d="M945 73L937 118L905 98Z" fill="var(--nd-arrow, #8A6F52)"
+        stroke="var(--nd-arrow, #8A6F52)" stroke-width="3" stroke-linejoin="round"/>
 
-  <!-- ============ C · 弹窗虚线化，螺旋自其中升起 ============ -->
-  <g transform="translate(440,0)">
-    <rect x="58" y="112" width="84" height="62" rx="10" fill="#FFFFFF" stroke="#E6E1D8"
-          stroke-width="2" stroke-dasharray="5 6"/>
-    <path d="M70 128 L96 128" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
-    <path d="M127 125 L133 131 M133 125 L127 131" stroke="#D5CEC2" stroke-width="1.6" stroke-linecap="round"/>
-    <path d="M70 146 L130 146" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
-    <path d="M70 160 L112 160" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
-    <path d="M100 112 A24 24 0 0 1 100 64 A15 15 0 0 0 100 34"
-          stroke="#D5CEC2" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 7"/>
-    <path d="M91 45 L100 33 L109 45"
-          stroke="#9C968B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="100" y="216" font-family="Inter, PingFang SC, sans-serif" font-size="14" text-anchor="middle">
-      <tspan fill="#262420">暂无元字段数据，</tspan><tspan fill="#74593F">刷新列表</tspan>
-    </text>
-    <text x="100" y="245" font-family="Inter, PingFang SC, sans-serif" font-size="12"
-          fill="#9C968B" text-anchor="middle">C · 弹窗虚线化，螺旋升起</text>
+  <!-- 主体卷纸 -->
+  <path d="M300 351C374 333 445 316 515 314C555 313 580 337 591 370C605 421 596 504 600 553C604 594 623 619 648 640C588 672 508 688 411 684C354 681 320 650 309 605C293 543 298 431 300 351Z"
+        fill="url(#nd-paper-gradient)"/>
+  <path d="M300 351C372 334 444 317 515 314C553 313 578 334 590 367L594 397C511 373 416 377 345 400C339 376 322 359 300 351Z"
+        fill="var(--nd-paper-light, #D5C6B2)" fill-opacity="0.68"/>
+
+  <!-- 左侧卷边 -->
+  <path d="M300 351C260 357 233 383 233 416C233 451 259 470 294 468C325 466 347 447 350 420C352 391 331 359 300 351Z"
+        fill="url(#nd-roll-gradient)"/>
+  <path d="M298 393C325 388 346 398 350 418C354 441 332 459 298 464C309 445 308 412 298 393Z"
+        fill="var(--nd-paper, #BCA58A)" fill-opacity="0.68"/>
+
+  <!-- 空数据占位 -->
+  <path d="M378 387L440 379L448 441L386 449Z" fill="var(--nd-detail, #FFFFFF)"
+        fill-opacity="0.94" stroke-linejoin="round"/>
+  <g fill="none" stroke="var(--nd-detail, #FFFFFF)" stroke-width="12"
+     stroke-linecap="round" stroke-opacity="0.94">
+    <path d="M478 381L541 373"/>
+    <path d="M480 418L548 409"/>
+    <path d="M383 481L555 459"/>
+    <path d="M381 524L551 502"/>
+    <path d="M385 566L548 545"/>
+    <path d="M393 608L552 587"/>
+    <path d="M406 648L560 628"/>
   </g>
 </svg>
