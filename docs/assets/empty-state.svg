@@ -1,0 +1,61 @@
+<svg width="640" height="270" viewBox="0 0 640 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="270" fill="#FFFFFF"/>
+
+  <defs>
+    <!-- 弹窗卡片（共用图形） -->
+    <g id="card">
+      <rect x="58" y="92" width="84" height="62" rx="10" fill="#FFFFFF" stroke="#E6E1D8" stroke-width="2"/>
+      <path d="M70 108 L96 108" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
+      <path d="M127 105 L133 111 M133 105 L127 111" stroke="#D5CEC2" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M70 126 L130 126" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
+      <path d="M70 140 L112 140" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <!-- ============ A · 环绕一圈，右上出头 ============ -->
+  <g>
+    <path d="M100 173 A60 50 0 1 1 146 84"
+          stroke="#D5CEC2" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 7"/>
+    <use href="#card"/>
+    <path d="M134 87 L146 84 L143 96"
+          stroke="#9C968B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="100" y="216" font-family="Inter, PingFang SC, sans-serif" font-size="14" text-anchor="middle">
+      <tspan fill="#262420">暂无元字段数据，</tspan><tspan fill="#74593F">刷新列表</tspan>
+    </text>
+    <text x="100" y="245" font-family="Inter, PingFang SC, sans-serif" font-size="12"
+          fill="#9C968B" text-anchor="middle">A · 环绕一圈，右上出头</text>
+  </g>
+
+  <!-- ============ B · 环绕后收窄升走 ============ -->
+  <g transform="translate(220,0)">
+    <path d="M100 173 A60 50 0 1 1 138 94 A26 22 0 0 1 100 66"
+          stroke="#D5CEC2" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 7"/>
+    <use href="#card"/>
+    <path d="M91 77 L100 65 L109 77"
+          stroke="#9C968B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="100" y="216" font-family="Inter, PingFang SC, sans-serif" font-size="14" text-anchor="middle">
+      <tspan fill="#262420">暂无元字段数据，</tspan><tspan fill="#74593F">刷新列表</tspan>
+    </text>
+    <text x="100" y="245" font-family="Inter, PingFang SC, sans-serif" font-size="12"
+          fill="#9C968B" text-anchor="middle">B · 环绕后收窄升走</text>
+  </g>
+
+  <!-- ============ C · 弹窗虚线化，螺旋自其中升起 ============ -->
+  <g transform="translate(440,0)">
+    <rect x="58" y="112" width="84" height="62" rx="10" fill="#FFFFFF" stroke="#E6E1D8"
+          stroke-width="2" stroke-dasharray="5 6"/>
+    <path d="M70 128 L96 128" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
+    <path d="M127 125 L133 131 M133 125 L127 131" stroke="#D5CEC2" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M70 146 L130 146" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
+    <path d="M70 160 L112 160" stroke="#F0EDE7" stroke-width="5" stroke-linecap="round"/>
+    <path d="M100 112 A24 24 0 0 1 100 64 A15 15 0 0 0 100 34"
+          stroke="#D5CEC2" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 7"/>
+    <path d="M91 45 L100 33 L109 45"
+          stroke="#9C968B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="100" y="216" font-family="Inter, PingFang SC, sans-serif" font-size="14" text-anchor="middle">
+      <tspan fill="#262420">暂无元字段数据，</tspan><tspan fill="#74593F">刷新列表</tspan>
+    </text>
+    <text x="100" y="245" font-family="Inter, PingFang SC, sans-serif" font-size="12"
+          fill="#9C968B" text-anchor="middle">C · 弹窗虚线化，螺旋升起</text>
+  </g>
+</svg>
