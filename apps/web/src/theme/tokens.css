@@ -1,0 +1,104 @@
+/*
+ * FlowCanvas 本地 token（07 §1.4 单源纪律）。
+ *
+ * 这里**只放 antd 没有的量**：全部间距档、自有面板圆角、胶囊圆角、中性填充组、
+ * 滚动条两色、侧栏宽度与头部高度。凡 antd 已有的（圆角三档、控件高、字体、
+ * 主色与错误色派生、遮罩、chrome 全部配色）一律走 antd token，本地不留同值副本。
+ */
+:root {
+  /* —— 色板 07 §2.1 —— */
+  --bg: #faf8f5;
+  --surface: #ffffff;
+  --border: #e6e1d8;
+  --border-strong: #d5cec2;
+  --primary: #8a6f52;
+  --primary-hover: #74593f;
+  --primary-tint: #f1eae0;
+  --text: #262420;
+  --text-secondary: #6f6a61;
+  --text-faint: #9c968b;
+
+  /* —— 补充 token 07 §2.3 —— */
+  --text-on-primary: #ffffff;
+  --fill-muted: #f0ede7;
+  --fill-muted-fg: #8f8a80;
+  --scrollbar-thumb: rgba(138, 111, 82, 0.3);
+  --scrollbar-thumb-hover: rgba(138, 111, 82, 0.5);
+
+  /* —— 间距 07 §4：一切间距取自本表，不得出现表外数值 —— */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-inner: 16px;
+  --space-panel-gap: 16px;
+  --space-field-gap: 16px;
+
+  /* —— 尺寸 07 §4 —— */
+  --size-sidebar-w: 240px;
+  --size-sidebar-w-collapsed: 64px;
+  --size-header-h: 60px;
+  --size-sidebar-footer-h: 56px;
+
+  /* —— antd 阶梯之外的圆角 07 §3.2 —— */
+  --radius-panel: 12px;
+  --radius-pill: 999px;
+
+  /* —— 阴影三级 07 §4 —— */
+  --shadow-chrome: 0 2px 6px rgba(38, 36, 32, 0.13);
+  --shadow-panel: 0 2px 8px rgba(38, 36, 32, 0.13);
+  --shadow-overlay: 0 8px 24px rgba(38, 36, 32, 0.16);
+}
+
+html,
+body,
+#root,
+/* antd 的 <App> 会插一层 .ant-app div——不给它高度，外壳的 height:100% 就断在这里 */
+.ant-app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 页面级永不滚动，一切滚动发生在面板主体内（08 §2.1） */
+body {
+  overflow: hidden;
+}
+
+/*
+ * 抽屉圆角：**左侧两角 8、右侧两角 0**（07 §3.2）。
+ * antd 无此形态，属登记偏离（07 §6 偏离项 2）——组件 token 给不出「只圆两角」，
+ * 只能这一处自定义样式。
+ */
+.ant-drawer-right .ant-drawer-content {
+  border-start-start-radius: 8px;
+  border-end-start-radius: 8px;
+}
+
+/* 滚动条 07 §4：只有一档 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}

@@ -1,0 +1,146 @@
+/* 外壳结构与 chrome 投影（08 §2 / 07 §4）。区域命名严格取自 08 §2.1 的术语表。 */
+
+.shell {
+  height: 100%;
+}
+
+/*
+ * 侧栏右缘：border-right 1px --border-strong + 骨架级阴影，投影**贯穿全高**——
+ * 侧栏压在头部之上，构成单向 z 序「侧栏 > 头部 > 内容」（07 §4）。
+ * chrome 底上的线取 --border-strong：--border 压在 #F0EDE7 上只剩 1.09:1，几乎不可见。
+ */
+.sidebar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-chrome);
+}
+
+.sidebar :global(.ant-layout-sider-children) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 头部与主体靠底色连续读作整体，**不加分隔线**（08 §2.2） */
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  height: var(--size-header-h);
+  padding: 0 var(--space-inner);
+  flex: none;
+  overflow: hidden;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: var(--space-sm);
+  background: var(--primary);
+}
+
+.appName {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.sidebarBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-top: var(--space-md);
+}
+
+.sidebarBody :global(.ant-menu) {
+  border-inline-end: none;
+  background: transparent;
+}
+
+/*
+ * 选中项左缘 3px 位于**侧栏最左边**（非药丸左侧）——antd 无此物，
+ * 走 --primary + 自定义样式，是登记偏离（07 §6 偏离项 1）。
+ * antd inline menu item 的 margin-inline 为 4，故左移 4px 贴到侧栏边缘。
+ */
+.sidebarBody :global(.ant-menu-item) {
+  position: relative;
+}
+
+.sidebarBody :global(.ant-menu-item-selected)::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--primary);
+}
+
+/*
+ * 底部工具条是常驻功能条、不随主体滚动，须有 1px --border-strong 与滚动区断开（08 §2.2）。
+ */
+.sidebarFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--size-sidebar-footer-h);
+  flex: none;
+  border-top: 1px solid var(--border-strong);
+}
+
+.mainColumn {
+  min-width: 0;
+  background: var(--bg);
+}
+
+/*
+ * 头部向下投影**仅侧栏右侧那一段**，不越过侧栏——靠 MainColumn 内的 z-index 分层实现。
+ */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--size-header-h);
+  flex: none;
+  padding: 0 var(--space-inner);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-chrome);
+  position: relative;
+  z-index: 1;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.syncBadge {
+  margin-inline-end: 0;
+  background: var(--fill-muted);
+  color: var(--fill-muted-fg);
+  border: none;
+}
+
+/* PageBody —— 逐页定义的就是这里。padding space/inner，页面级永不滚动。 */
+.pageBody {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-inner);
+  overflow: hidden;
+}

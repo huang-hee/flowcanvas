@@ -1,0 +1,41 @@
+/* 规格取自 Figma 205:1838。行距 8、RuleRow 高 32、底 --fill-muted、pl 12 / pr 4。 */
+
+.builder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding-left: var(--space-md);
+  padding-right: var(--space-xs);
+  border-radius: 6px;
+  background: var(--fill-muted);
+}
+
+.ruleContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+/* text/body */
+.ruleName {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* 行内参数取 text/mono-sm（09 §2.4） */
+.param {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 20px;
+  max-width: 180px;
+}

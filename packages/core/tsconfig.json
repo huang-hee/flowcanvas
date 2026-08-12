@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // 故意不含 DOM / DOM.Iterable —— core 必须零浏览器依赖（06 §1）。
+    // 一旦有人在 core 里写 window / document / indexedDB，这里就会类型报错。
+    "lib": ["ES2023"],
+    "types": []
+  },
+  "include": ["src/**/*.ts", "vitest.config.ts"]
+}

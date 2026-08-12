@@ -1,0 +1,19 @@
+/* ⚠️ 无设计稿依据（spec-ui.md §4.1），形制沿用 RuleBuilder 的 RuleRow。 */
+
+.fields {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+  min-width: 0;
+}
+
+/* value 走 mono——它是机器可读的键，与字段键同性质 */
+.valueInput {
+  flex: 4;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.labelInput {
+  flex: 6;
+}

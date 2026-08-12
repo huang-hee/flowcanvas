@@ -1,0 +1,30 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+/* 插画高 160，与文案间距 space/inner（08 §5.4） */
+.image {
+  height: 160px;
+  margin-bottom: var(--space-inner);
+}
+
+/* 文案一律单行不换行 */
+.text {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-secondary);
+}
+
+.action {
+  color: var(--primary-hover);
+}
+
+.action:hover {
+  text-decoration: underline;
+}

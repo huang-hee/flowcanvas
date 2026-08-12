@@ -1,0 +1,55 @@
+/* 面板原语（08 §3.1）：纵向三段式，头/底固定不滚，主体必有且是滚动区。 */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.fill {
+  flex: 1;
+  height: 100%;
+}
+
+.hug {
+  flex: none;
+}
+
+/* card 皮肤（08 §3.2）：白底 + 1px --border + 自有面板圆角 + 面板级阴影 */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+}
+
+/* plain：无底色无边框的结构容器 */
+.plain {
+  background: transparent;
+}
+
+/*
+ * 头 / 底与主体之间以 1px --border 分隔线相隔，分隔线**横贯面板全宽**——
+ * 所以 padding 只能逐段给，不能给面板容器。
+ */
+.header {
+  flex: none;
+  padding: var(--space-inner);
+  border-bottom: 1px solid var(--border);
+}
+
+.footer {
+  flex: none;
+  padding: var(--space-inner);
+  border-top: 1px solid var(--border);
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.bodyPadded {
+  padding: var(--space-inner);
+}

@@ -1,0 +1,108 @@
+meta:
+  id: feat-meta-fields-page-20260812205820
+  # T2 由用户拍板（2026-08-12）。注：三档各自预填哪些节点从未定义（重构方案 L972-973/L1061，
+  # 明写「推到落资产阶段定」）；归档旧定义 T2 = Test + Review + Validate，只规定关卡、不是「全部节点」，
+  # 且与 T1 逐字相同、Validate 已裁定不捡回。当前 flow 的四个关卡节点与该定义相符。flow 为唯一权威。
+  track: T2
+  workspace: current
+  branch: feat/meta-fields-page-20260812205820
+
+status: active
+
+flow:
+  - {node: 工作区前检,   role: scheduler}
+  - {node: 聊需求,       role: scheduler, skill: [聊需求]}
+  - {node: 定轨道与流程, role: scheduler, skill: [定轨道与流程], gate: 1}
+  - {node: 写需求文档,   role: pd,        skill: [写方案], template: requirement}
+  - {node: 聊技术方案,   role: scheduler, skill: [聊技术方案]}
+  - {node: 聊交互方案,   role: scheduler, skill: [聊交互方案], gate: 2}
+  - {node: 写技术方案,   role: coder,     skill: [写方案], template: spec-tech}
+  - {node: 交互设计,     role: ui,        skill: [写方案], template: spec-ui}
+  - {node: 写测试用例,   role: tester,    skill: [写方案], template: spec-test}
+  - {node: 资产审查,     role: reviewer,  skill: [资产审查]}
+  - {node: 实现,         role: coder,     skill: [实现]}
+  - {node: 代码审查,     role: reviewer,  skill: [代码审查]}
+  - {node: 执行测试用例, role: tester,    skill: [执行测试用例]}
+  - {node: 汇报,         role: scheduler, skill: [汇报], gate: 3}
+  # 「汇总」不预排——停顿 3 用户选了要 summary 才插入这一行
+  - {node: 汇总,         role: scheduler, skill: [汇总], template: summary}
+  - {node: 清理,         role: scheduler, gate: 4}
+  - {node: 提交,         role: scheduler, gate: 5}
+  - {node: 推送,         role: scheduler}
+
+# 菜单全集 17 项，本 flow 17 项 —— 一项未裁。
+#   「聊交互方案」（scheduler）与「交互设计 / spec-ui.md」（ui）两项，用户在聊技术方案阶段
+#     追加决定全部保留（原停顿 1 曾裁掉后者，理由是 docs/09 §2 已定稿；用户推翻）。
+#   「汇总」按规则不预排，停顿 3 用户选了才插入。
+
+items:
+  - id: I1
+    node: 实现
+    content: monorepo 骨架 + 工程工具（pnpm workspace / TS strict / ESLint+Prettier / vitest / GitHub Actions CI）
+    status: 已实现
+  - id: I2
+    node: 实现
+    content: core/schema —— MetaField 及其依赖的 zod 协议（FieldDataType / ValidationRule / NumberConfig / UnitGroup）+ 协议测试
+    status: 已实现
+  - id: I3
+    node: 实现
+    content: apps/web 骨架 —— Vite + React + createHashRouter + antd 主题接线（docs/07 token）
+    status: 已实现
+  - id: I4
+    node: 实现
+    content: core/ports StorageAdapter 端口 + apps/web IndexedDBAdapter + MetaField 仓储
+    status: 已实现
+  - id: I5
+    node: 实现
+    content: 控制台外壳 —— 左菜单（menus 配置 + 收起态）+ PageHeader（标题按 path 匹配）
+    status: 已实现
+  - id: I6
+    node: 实现
+    content: 元字段页 · 列表态 —— 筛选面板 + 表格面板（六列，名称吃剩余宽）+ 分页 + 空态
+    status: 已实现
+  - id: I7
+    node: 实现
+    content: 元字段页 · 编辑抽屉 —— 560 宽全高，字段序 + 必填 + 精度/单位三态 + 校验规则构建器（自研）+ 默认值
+    status: 已实现
+  - id: I8
+    node: 实现
+    content: 元字段页 · 浮层 —— 引用清单模态 + 删除确认（确认型）+ 被引用禁删（禁用 + Tooltip）
+    status: 已实现
+  - id: I9
+    node: 实现
+    content: 数据接线 —— CRUD + fieldKey 唯一性校验 + 空值归一化 + precision 四舍五入（round half away from zero）
+    status: 已实现
+  - id: I10
+    node: 实现
+    content: 回写 docs/01 §2 —— MetaField 接口补 createdAt / updatedAt（UTC ISO 8601，对齐 01 §2.4 时间语义）
+    status: 已实现
+  - id: I11
+    node: 实现
+    content: 回写 docs/09 §2.1 —— 筛选 placeholder 改「请输入名称或字段键查询」（停顿 2 拍板：以 Figma 稿 194:95 为准）
+    status: 已实现
+
+# checks.node 记「被检查的那个节点」，检查者写进 result 文本，不新增字段。
+# ⚠️ 文档歧义：手册要求「items.node 与 checks.node 必须是同一个值」，但资产审查的对象是
+#   spec 类产物（产出节点是「写需求文档」等），根本不在 items 里——items 恒为「实现」。
+#   这条规则在资产审查这一环对不上，已登记进试跑记录。
+checks:
+  - node: 写需求文档
+    result: "资产审查（⚠️ 自演＝自审，可信度有限）：查出 5 条落盘不一致，均已修复——R1 事项清单缺 I10/I11；R2 §2.3 停顿 2 已定却仍写『不在本文件下结论』；R3 I7『7 段字段序』与 spec-ui 定稿的 9 个 Form.Item 冲突；R4 C3 未标『精度/单位模式』为 number 专属且漏了 enum/list 的条件必填；R5 A1 未标注其对 spec-ui §4 无稿推导的依赖"
+  - node: 写技术方案
+    result: "资产审查：与 requirement / spec-ui / spec-test 交叉核对，版本表、目录结构、路由表、T1-T12 约束均无冲突，无需修改"
+  - node: 交互设计
+    result: "资产审查：§4 无稿推导已自行标注『待补稿后作废』，收敛点 C1-C5 与停顿 2 拍板逐条对应，无需修改"
+  - node: 写测试用例
+    result: "资产审查：34 条用例与验收条件 1:1 覆盖无遗漏；TC-C3 随 requirement C3 的修订同步改为『恒必填 + 条件必填 + 反向断言』"
+  - node: 实现
+    result: "代码审查（⚠️ 自演＝自审，可信度有限）：查出 4 处真实缺陷，均已修复并复测——
+      ① MetaFieldDrawer 的 form.validateFields() rejection 未捕获，调用处 void 之 → unhandled rejection；
+      ② app-settings 用 ...get() 把 zustand store 的方法一并写进 IndexedDB，函数无法结构化克隆 →
+         DataCloneError，侧栏收起态静默丢失（跨会话记忆失效）；
+      ③ 筛选面板的 Form.Item 用了 noStyle，而 08 §7 的行距 8 正由 Form.itemMarginBottom 承载，
+         noStyle 不渲染 form-item → 那层 ConfigProvider 覆盖落空，多行时行距塌成 0；
+      ④ 抽屉用 form.getFieldValue('itemType') 在渲染期读值但不订阅变更 → 改子项类型后默认值字段显隐不更新。
+      lint / typecheck / build 三项全绿。"
+  - node: 实现
+    result: "执行测试用例：75 passed / 0 failed（core 协议 44 + 列表与浮层 14 + 编辑抽屉 11 + 外壳 6）。
+      上述缺陷 ① ② 正是被组件测试抓出来的——若按『只做协议层单测』跑，这两个都会漏网。"

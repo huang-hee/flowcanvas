@@ -1,0 +1,83 @@
+/* 通用表格页布局 A · 完整型（08 §5.1）：筛选面板 hug + 表格面板撑满。 */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.filterPanel {
+  margin-bottom: var(--space-panel-gap);
+}
+
+/* 栅格 grid + 自适应，默认一行四列各列等宽；列间距 space/md（08 §7） */
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: var(--space-md);
+}
+
+/* 按钮块永远位于最后一行最右侧，占据该行剩余列；3 项形态即第 1 行第 4 列 */
+.filterActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.tablePanel {
+  min-height: 0;
+}
+
+/*
+ * 工具条位于 body 顶部，**随内容滚走、不吸顶**（08 §5.1）。
+ * 表格面板的 body 不给统一 padding：表头 sticky 到 body 顶部，
+ * 上方若留 padding，滚动行会从缝里透出（08 §5.3 第②条）。
+ */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-inner) var(--space-inner) 0;
+}
+
+.toolbarTitle {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.tableWrap {
+  padding: 0 var(--space-inner) var(--space-inner);
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/*
+ * 操作列固定 120（09 §2.2）。link 按钮自带 paddingInline 15，两个并排会撑破列宽而换行——
+ * 去掉水平内距，两按钮间距由 gap 承担（space/sm）。
+ */
+.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  white-space: nowrap;
+}
+
+.actions :global(.ant-btn) {
+  padding-inline: 0;
+  height: auto;
+}
+
+/* 破坏性确认框的图标取 colorError（07 §6 偏离项 9） */
+.dangerIcon {
+  color: #c24e3f;
+}

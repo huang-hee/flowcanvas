@@ -1,0 +1,46 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* text/title-lg：编辑面板头部对象名（07 §3.1） */
+.title {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/*
+ * 引用计数徽标：kit Tag 胶囊（Figma 210:1498）。
+ * **胶囊 999 只留给引用计数徽标**——其余一切徽章取徽章档 4（07 §3.2）。
+ */
+.badge {
+  margin-inline-end: 0;
+  background: var(--fill-muted);
+  color: var(--fill-muted-fg);
+  border: none;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+/* 底部动作条：左槽为空，右按钮组 [取消][保存]（08 §4.2 / 09 §2.3） */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/*
+ * 控件宽度不逐项写死，跟随 Form.Item 撑满（09 §2.3）；
+ * 精度这类短控件在代码里可给 width，但**不进规范**。
+ */
+.shortControl {
+  width: 320px;
+}

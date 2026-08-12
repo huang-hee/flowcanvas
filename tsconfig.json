@@ -1,0 +1,10 @@
+{
+  // 只为根目录的配置文件提供一个 TS project——否则 typescript-eslint 的 projectService
+  // 找不到它们所属的 tsconfig，报 "was not found by the project service"。
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "types": ["node"]
+  },
+  "include": ["vitest.config.ts", "eslint.config.js"]
+}
