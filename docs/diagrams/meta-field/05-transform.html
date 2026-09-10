@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>元字段 · 数据转换链</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #FAF8F5; --color-ink: #262420; --color-muted: #6F6A61; --color-accent: #8A6F52;
+      --font-sans: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --font-serif: 'Instrument Serif', 'Noto Serif SC', serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, monospace; }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1280px; width: 100%; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; color: var(--color-ink); margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 960px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Data pipeline · Meta Field · Shapes &amp; transforms</p>
+    <h1>元字段 · 数据转换链</h1>
+
+    <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mf-transform-title mf-transform-desc">
+      <title id="mf-transform-title">元字段 · 数据转换链</title>
+      <desc id="mf-transform-desc">数据转换图：meta_field 行经 rowToRecord 成为 MetaFieldRecord，经 describe 成为 MetaFieldInput（抽屉表单也合并到这里），经 checkMetaField 与 parse 成为 canonical MetaField；之后被组装为 ResolvedField、推导为渲染结构、复制进发布快照；虚线是反向写回。</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#6F6A61"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8A6F52"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#74593F"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#FAF8F5"/>
+
+      <!-- Zones -->
+      <rect x="272" y="56" width="512" height="272" rx="8" fill="rgba(38,36,32,0.02)" stroke="rgba(38,36,32,0.10)" stroke-width="0.8"/>
+      <rect x="452" y="60" width="152" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="528" y="69" fill="rgba(38,36,32,0.40)" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.14em">APP LAYER · SHARED BY WEB &amp; NODE</text>
+
+      <rect x="824" y="56" width="432" height="400" rx="8" fill="rgba(38,36,32,0.02)" stroke="rgba(38,36,32,0.10)" stroke-width="0.8"/>
+      <rect x="984" y="60" width="112" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="1040" y="69" fill="rgba(38,36,32,0.40)" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.14em">FIELD-CORE · CONSUMERS</text>
+
+      <!-- Arrows -->
+      <line x1="216" y1="256" x2="288" y2="256" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="288" y1="280" x2="216" y2="280" stroke="#6F6A61" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <line x1="496" y1="256" x2="560" y2="256" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="560" y1="280" x2="496" y2="280" stroke="#6F6A61" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <line x1="664" y1="152" x2="664" y2="232" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="768" y1="256" x2="840" y2="256" stroke="#8A6F52" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <line x1="1016" y1="256" x2="1080" y2="256" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="928" y1="232" x2="928" y2="152" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="1160" y1="296" x2="1160" y2="376" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Arrow labels -->
+      <rect x="220" y="236" width="64" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="252" y="246" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ROWTORECORD</text>
+      <rect x="224" y="262" width="56" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="252" y="272" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">UPSERT()</text>
+
+      <rect x="500" y="236" width="56" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="528" y="246" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DESCRIBE()</text>
+      <rect x="500" y="262" width="56" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="528" y="272" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">+APP PROPS</text>
+
+      <rect x="676" y="184" width="64" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="708" y="194" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">MERGE FORM</text>
+
+      <rect x="772" y="236" width="64" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="804" y="246" fill="#8A6F52" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CHECK·PARSE</text>
+
+      <rect x="1020" y="236" width="56" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="1048" y="246" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ASSEMBLE()</text>
+
+      <rect x="940" y="184" width="56" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="968" y="194" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">PUBLISH</text>
+
+      <rect x="1172" y="328" width="72" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="1208" y="338" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TORENDERMODEL</text>
+
+      <!-- Nodes -->
+      <rect x="40" y="232" width="176" height="64" rx="6" fill="#FAF8F5"/>
+      <rect x="40" y="232" width="176" height="64" rx="6" fill="rgba(38,36,32,0.05)" stroke="#6F6A61" stroke-width="1"/>
+      <rect x="48" y="240" width="28" height="12" rx="2" fill="transparent" stroke="rgba(111,106,97,0.50)" stroke-width="0.8"/>
+      <text x="62" y="249" fill="#6F6A61" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DB</text>
+      <text x="128" y="268" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">meta_field 行</text>
+      <text x="128" y="284" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">snake_case · jsonb columns</text>
+
+      <rect x="288" y="232" width="208" height="64" rx="6" fill="#FAF8F5"/>
+      <rect x="288" y="232" width="208" height="64" rx="6" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <rect x="296" y="240" width="28" height="12" rx="2" fill="transparent" stroke="rgba(38,36,32,0.40)" stroke-width="0.8"/>
+      <text x="310" y="249" fill="#262420" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DTO</text>
+      <text x="392" y="268" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">MetaFieldRecord</text>
+      <text x="392" y="284" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">canonical + audit + refs</text>
+
+      <rect x="560" y="88" width="208" height="64" rx="6" fill="#FAF8F5"/>
+      <rect x="560" y="88" width="208" height="64" rx="6" fill="rgba(111,106,97,0.10)" stroke="#9C968B" stroke-width="1"/>
+      <rect x="568" y="96" width="32" height="12" rx="2" fill="transparent" stroke="rgba(156,150,139,0.60)" stroke-width="0.8"/>
+      <text x="584" y="105" fill="#6F6A61" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.08em">FORM</text>
+      <text x="664" y="124" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">抽屉表单 · 六段</text>
+      <text x="664" y="140" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">fieldKey … defaultValue helpText</text>
+
+      <rect x="560" y="232" width="208" height="64" rx="6" fill="#FAF8F5"/>
+      <rect x="560" y="232" width="208" height="64" rx="6" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <rect x="568" y="240" width="28" height="12" rx="2" fill="transparent" stroke="rgba(38,36,32,0.40)" stroke-width="0.8"/>
+      <text x="582" y="249" fill="#262420" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.08em">IN</text>
+      <text x="664" y="268" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">MetaFieldInput</text>
+      <text x="664" y="284" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">z.input&lt;MetaFieldSchema&gt;</text>
+
+      <rect x="840" y="232" width="176" height="64" rx="6" fill="#FAF8F5"/>
+      <rect x="840" y="232" width="176" height="64" rx="6" fill="#F1EAE0" stroke="#8A6F52" stroke-width="1"/>
+      <rect x="848" y="240" width="36" height="12" rx="2" fill="transparent" stroke="rgba(138,111,82,0.50)" stroke-width="0.8"/>
+      <text x="866" y="249" fill="#8A6F52" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CANON</text>
+      <text x="928" y="268" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">MetaField</text>
+      <text x="928" y="284" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">rules defaulted · passed gate</text>
+
+      <rect x="840" y="88" width="176" height="64" rx="6" fill="#FAF8F5"/>
+      <rect x="840" y="88" width="176" height="64" rx="6" fill="rgba(38,36,32,0.02)" stroke="rgba(38,36,32,0.22)" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="848" y="96" width="32" height="12" rx="2" fill="transparent" stroke="rgba(38,36,32,0.22)" stroke-width="0.8"/>
+      <text x="864" y="105" fill="#6F6A61" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SNAP</text>
+      <text x="928" y="124" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">FlowVersion 副本</text>
+      <text x="928" y="140" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">frozen · filter stripped</text>
+
+      <rect x="1080" y="232" width="160" height="64" rx="6" fill="#FAF8F5"/>
+      <rect x="1080" y="232" width="160" height="64" rx="6" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <rect x="1088" y="240" width="28" height="12" rx="2" fill="transparent" stroke="rgba(38,36,32,0.40)" stroke-width="0.8"/>
+      <text x="1102" y="249" fill="#262420" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.08em">RES</text>
+      <text x="1160" y="268" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">ResolvedField</text>
+      <text x="1160" y="284" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">field + binding merged</text>
+
+      <rect x="1080" y="376" width="160" height="64" rx="6" fill="#FAF8F5"/>
+      <rect x="1080" y="376" width="160" height="64" rx="6" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <rect x="1088" y="384" width="28" height="12" rx="2" fill="transparent" stroke="rgba(38,36,32,0.40)" stroke-width="0.8"/>
+      <text x="1102" y="393" fill="#262420" font-size="7" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.08em">UI</text>
+      <text x="1160" y="412" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">RenderNode</text>
+      <text x="1160" y="428" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">kind · constraints · options</text>
+
+      <!-- Legend -->
+      <line x1="40" y1="616" x2="1240" y2="616" stroke="rgba(38,36,32,0.10)" stroke-width="0.8"/>
+      <text x="40" y="632" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" letter-spacing="0.18em">LEGEND</text>
+
+      <rect x="40" y="648" width="14" height="10" rx="2" fill="#F1EAE0" stroke="#8A6F52" stroke-width="1"/>
+      <text x="60" y="656" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">canonical（唯一被 core 读的形态）</text>
+
+      <rect x="304" y="648" width="14" height="10" rx="2" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="324" y="656" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">中间形态</text>
+
+      <rect x="416" y="648" width="14" height="10" rx="2" fill="rgba(38,36,32,0.05)" stroke="#6F6A61" stroke-width="1"/>
+      <text x="436" y="656" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">存储</text>
+
+      <rect x="504" y="648" width="14" height="10" rx="2" fill="rgba(111,106,97,0.10)" stroke="#9C968B" stroke-width="1"/>
+      <text x="524" y="656" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">用户输入</text>
+
+      <rect x="616" y="648" width="14" height="10" rx="2" fill="rgba(38,36,32,0.02)" stroke="rgba(38,36,32,0.22)" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="636" y="656" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">不可变副本</text>
+
+      <line x1="744" y1="654" x2="772" y2="654" stroke="#8A6F52" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="780" y="656" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">合规门</text>
+
+      <line x1="856" y1="654" x2="884" y2="654" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="892" y="656" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">转换</text>
+
+      <line x1="952" y1="654" x2="980" y2="654" stroke="#6F6A61" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <text x="988" y="656" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">反向写回</text>
+    </svg>
+  </div>
+</body>
+</html>

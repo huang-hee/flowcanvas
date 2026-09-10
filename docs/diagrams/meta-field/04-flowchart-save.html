@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>元字段 · 保存决策流程</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #FAF8F5; --color-ink: #262420; --color-muted: #6F6A61; --color-accent: #8A6F52;
+      --font-sans: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --font-serif: 'Instrument Serif', 'Noto Serif SC', serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, monospace; }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1280px; width: 100%; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; color: var(--color-ink); margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 960px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Flowchart · Meta Field · Save decision</p>
+    <h1>元字段 · 保存决策流程</h1>
+
+    <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mf-flow-save-title mf-flow-save-desc">
+      <title id="mf-flow-save-title">元字段 · 保存决策流程</title>
+      <desc id="mf-flow-save-desc">流程图：点击保存后组装 canonical 输入，先经合规门判断是否有 issue，再判断 dataType 是否变更并处理失效面确认，随后提交接口由服务端再过门写库，成功后新建询问配置规则、编辑则关闭。</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#6F6A61"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8A6F52"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#74593F"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#FAF8F5"/>
+
+      <!-- Arrows first -->
+      <line x1="640" y1="88" x2="640" y2="116" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="640" y1="172" x2="640" y2="200" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="720" y1="232" x2="872" y2="232" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="640" y1="264" x2="640" y2="296" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="720" y1="328" x2="872" y2="328" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="640" y1="360" x2="640" y2="404" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 1008,356 V 400 Q 1008,408 1000,408 H 648" fill="none" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="640" y1="412" x2="640" y2="440" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="640" y1="496" x2="640" y2="528" stroke="#6F6A61" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="640" y1="584" x2="640" y2="616" stroke="#8A6F52" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+
+      <!-- Branch labels -->
+      <rect x="780" y="212" width="32" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="796" y="222" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">YES</text>
+      <rect x="652" y="272" width="24" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="664" y="282" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NO</text>
+      <rect x="780" y="308" width="32" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="796" y="318" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">YES</text>
+      <rect x="652" y="372" width="24" height="12" rx="2" fill="#FAF8F5"/>
+      <text x="664" y="382" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NO</text>
+
+      <!-- Start -->
+      <rect x="560" y="48" width="160" height="40" rx="20" fill="#FAF8F5"/>
+      <rect x="560" y="48" width="160" height="40" rx="20" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="640" y="72" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">点击「保存」</text>
+
+      <!-- 组装 -->
+      <rect x="520" y="116" width="240" height="56" rx="6" fill="#FAF8F5"/>
+      <rect x="520" y="116" width="240" height="56" rx="6" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="640" y="140" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">组装 canonical 输入</text>
+      <text x="640" y="156" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">{…describe(current), …form}</text>
+
+      <!-- 判断 1 · 合规门（焦点决策） -->
+      <polygon points="640,200 720,232 640,264 560,232" fill="#FAF8F5"/>
+      <polygon points="640,200 720,232 640,264 560,232" fill="#F1EAE0" stroke="#8A6F52" stroke-width="1"/>
+      <text x="640" y="236" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">合规门有 issue？</text>
+
+      <!-- 停止 -->
+      <rect x="872" y="212" width="192" height="40" rx="20" fill="#FAF8F5"/>
+      <rect x="872" y="212" width="192" height="40" rx="20" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="968" y="236" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">按 path 标红表单项 · 停止</text>
+
+      <!-- 判断 2 · dataType 变了 -->
+      <polygon points="640,296 720,328 640,360 560,328" fill="#FAF8F5"/>
+      <polygon points="640,296 720,328 640,360 560,328" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="640" y="332" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">dataType 变了？</text>
+
+      <!-- 失效面处理 -->
+      <rect x="872" y="300" width="272" height="56" rx="6" fill="#FAF8F5"/>
+      <rect x="872" y="300" width="272" height="56" rx="6" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="1008" y="324" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">算失效面 → 影响提示 → 确认后清理</text>
+      <text x="1008" y="340" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">dataTypeChangeImpact() · cancel = stop</text>
+
+      <!-- 汇合点 -->
+      <circle cx="640" cy="408" r="4" fill="#262420"/>
+
+      <!-- 提交 -->
+      <rect x="520" y="440" width="240" height="56" rx="6" fill="#FAF8F5"/>
+      <rect x="520" y="440" width="240" height="56" rx="6" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="640" y="464" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">PUT / POST → 服务端再过门 → upsert</text>
+      <text x="640" y="480" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">422 · 409 → issues back to form</text>
+
+      <!-- 成功 -->
+      <rect x="520" y="528" width="240" height="56" rx="6" fill="#FAF8F5"/>
+      <rect x="520" y="528" width="240" height="56" rx="6" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="640" y="552" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">保存成功 · 刷新列表</text>
+      <text x="640" y="568" fill="#6F6A61" font-size="9" font-family="'IBM Plex Mono', monospace" text-anchor="middle">new → ask to configure rules · edit → close</text>
+
+      <!-- End -->
+      <rect x="560" y="616" width="160" height="40" rx="20" fill="#FAF8F5"/>
+      <rect x="560" y="616" width="160" height="40" rx="20" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="640" y="640" fill="#262420" font-size="12" font-weight="600" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif" text-anchor="middle">结束</text>
+
+      <!-- Legend -->
+      <line x1="40" y1="672" x2="1240" y2="672" stroke="rgba(38,36,32,0.10)" stroke-width="0.8"/>
+      <text x="40" y="688" fill="#6F6A61" font-size="8" font-family="'IBM Plex Mono', monospace" letter-spacing="0.18em">LEGEND</text>
+
+      <rect x="40" y="700" width="20" height="10" rx="5" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="68" y="708" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">开始 / 结束</text>
+
+      <rect x="200" y="700" width="16" height="10" rx="2" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="224" y="708" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">动作</text>
+
+      <polygon points="320,700 332,705 320,710 308,705" fill="#ffffff" stroke="#262420" stroke-width="1"/>
+      <text x="340" y="708" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">判断</text>
+
+      <polygon points="424,700 436,705 424,710 412,705" fill="#F1EAE0" stroke="#8A6F52" stroke-width="1"/>
+      <text x="444" y="708" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">最关键的判断（合规门）</text>
+
+      <circle cx="628" cy="705" r="4" fill="#262420"/>
+      <text x="640" y="708" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">分支汇合</text>
+
+      <line x1="736" y1="705" x2="764" y2="705" stroke="#8A6F52" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="772" y="708" fill="#6F6A61" font-size="12" font-weight="500" font-family="'Inter', 'Noto Sans SC', 'PingFang SC', sans-serif">成功路径终点</text>
+    </svg>
+  </div>
+</body>
+</html>
